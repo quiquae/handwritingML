@@ -234,7 +234,6 @@ for j in range(n, nplots+n):
     plt.imshow(x)
     plt.axis('off')
     plt.subplots_adjust(hspace = 2)
-plt.show() # show plot
-
+plt.show() # show ploY
 
 print("Done running.")
