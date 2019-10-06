@@ -142,13 +142,10 @@ def insquare(image,addp):
 #-------------------- COMPLEX/AGGREGATE FUNCTIONS---------------------
 #---------------------------------------------------------------------
 
-def openimageasbinary(data_path):
-    # loads photo + converts to greyscale (not rgb photo!!!) then converts to binary
-    image = cv2.cvtColor(io.imread(data_path),cv2.COLOR_BGR2GRAY)
-    # uses weird threshold thing- DO NOT ALTER OR WILL NOT WORK:
-    #cv2 threshold for the 0-255 greyscale value to turn to black/white depending on value "minimizing intra-class intensity variance"  (otsu)
-    z,binary_image = cv2.threshold(image,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    return(binary_image)
+# open image in grayscale
+def openimage(data_path):
+    gray = cv2.imread(data_path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+    return(gray)
 
 def gaussian(image, blur):
     # gaussian blur- yay!
@@ -160,7 +157,7 @@ def pixelsquare(image):
     # puts inside square
     squared_image = insquare(bounded_image,0)
     # pixelates/rescales it to 20x20
-    rescaling_factor = 24/len(squared_image)
+    rescaling_factor = 20/len(squared_image)
     rescaled_image = rescale(np.asarray(bounded_image), rescaling_factor, anti_aliasing=False,multichannel=False)
     rescaled_image = img_as_ubyte(rescaled_image)
     # pads 20x20 square inside 28x28 whitespace
@@ -172,8 +169,11 @@ def pixelsquare(image):
 def mnistconvert(datapath, blur, showimage):
     if(showimage):
         showimg(mpimg.imread(datapath))
-    # loads orignally rgb image to binary + adds gaussian blur
-    image = gaussian(openimageasbinary(datapath),blur)
+    # loads orignally rgb image to grey + adds gaussian blur
+    image = gaussian(openimage(datapath),blur)
+    # resize it 
+    image = cv2.resize(image, (28, 28))
+    (thresh, image) = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     # puts inside pixelated square
     image = pixelsquare(image)
     # shows depending on the value of bool showimage

@@ -4,6 +4,7 @@ import random
 import math
 import json,codecs
 
+
 # loading function from my other program!!
 from mnistconverter2 import mnistconvert
 
@@ -123,15 +124,16 @@ print("Training Network...")
 ANN = neuralNetwork(noInputs = 784,noOutputs = 10, hiddenSize=200, learningRatex=0.1)
 # set inputs to be 784 (image pixel size), outputs to be 10 (digits 0-9), size of hidden layer, and learning rate
 ANN.initWeights() # initialize weights
-loaded = np.load('weights.npz')
+loaded = np.load('weights/weights.npz')
 iH = loaded['w1']
 hO = loaded['w2']
 ANN.setWeights(iH,hO)
 print("Running Network...")
 print("Image data load...")
 
-for i in range(3849,3853):
-    f = "C:\\Users\\creag\\OneDrive\\compsci-proj\\imgs\\IMG_"+str(i)+".JPG"
+images = ["actual_image.jpeg","actual_image2.jpeg","actual_image3.jpg"]
+for i in range(0,3):
+    f = "data/"+images[i]
     image = mnistconvert(f,4,True)
     res, ret = ANN.run(image.flatten())
     print("Prediction = ", res.argmax())
