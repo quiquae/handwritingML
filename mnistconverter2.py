@@ -1,14 +1,12 @@
 # every single thing i have to import for this image edit code (my goD!)
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-from scipy.ndimage import gaussian_filter
+import cv2
 import numpy as np
-from skimage import color
-from skimage import io
+from scipy.ndimage import gaussian_filter
+from skimage import color, io, img_as_ubyte
 from skimage.measure import block_reduce
 from skimage.transform import rescale
-from skimage import img_as_ubyte
-import cv2
 
 blurredness = 2 # controls how blurry gaussian filter is
 greyleniency = 16 # how many tones of leniency for considering something absolute white for bounding box, i.e. 3 --> anything >252 is white, <3 is black
