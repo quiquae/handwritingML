@@ -1,3 +1,23 @@
+#go to settings (bottom left cog)
+#find Python > Linting: Pylint Args (search pylint args)
+#add:
+# --generate-members
+# --extension-pkg-whitelist=cv2
+
+from neuralnet import neuralNetwork
+from mnistconverter import convert
+import argparse #pip install argparse
+
+## data comes in dataset as arrays of 785 length, need to be seperated into 784 pixel image array
+    ## and targetOutput number
+def convertForm(dataArray, numOutputs):
+    targetOutput = int(dataArray[0])
+    # take a number i.e. 7 which is target output, turn to [0,0,0,...1,0,0,0] for output nodes, where the 7th node is the only one which should be 1 (certain)
+    targetOutputArray = np.zeros(numOutputs)
+    targetOutputArray[targetOutput] = 1
+    image = dataArray[1:]
+    return image, targetOutputArray
+
 # ----------------------------------------------------------------------------
 # -------------------------------- LOAD DATA ---------------------------------
 # ----------------------------------------------------------------------------
@@ -5,7 +25,7 @@ print("Loading data...")
 # datapath where my files for the testing/training data are stored in my computer
 data_path = "C:\\Users\\creag\\Downloads\\"
 # test image I took from my phone of my own handwriting!! for later
-image = mnistconvert("C:\\Users\\creag\\OneDrive\\compsci-proj\\actual_image.jpeg",4,True)
+image = convert("C:\\Users\\creag\\OneDrive\\compsci-proj\\actual_image.jpeg",4,True)
 
 # load test & train data from csv files
 train_data = np.loadtxt(data_path + "mnist_train.csv", 
@@ -125,3 +145,5 @@ for j in range(n, nplots+n):
 plt.show() # show ploY
 
 print("Done running.")
+
+ANN.saveWeights('weights_test.npz')

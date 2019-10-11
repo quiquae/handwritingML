@@ -7,7 +7,7 @@ import random
 import math
 
 # loading function from my other program!!
-from mnistconverter2 import mnistconvert
+from mnistconverter import convert
 
 # ----------------------------------------------------------------------------
 # ----------------------------- CLASSES & FUNCTIONS --------------------------
@@ -19,17 +19,7 @@ from mnistconverter2 import mnistconvert
 # check function
 # initialize network (self)
 
-## data comes in dataset as arrays of 785 length, need to be seperated into 784 pixel image array
-    ## and targetOutput number
-def convertForm(dataArray,numOutputs):
-    targetOutput = int(dataArray[0])
-    # take a number i.e. 7 which is target output, turn to [0,0,0,...1,0,0,0] for output nodes, where the 7th node is the only one which should be 1 (certain)
-    targetOutputArray = np.zeros(numOutputs)
-    targetOutputArray[targetOutput] = 1
-    image = dataArray[1:]
-    return image, targetOutputArray
-
-# sigmoid function, which makes sure sum result x is between 0 and 1 / nonlinear idk? maths!!
+    # sigmoid function, which makes sure sum result x is between 0 and 1 / nonlinear idk? maths!!
 def sigmoid(x):
     #return(1/(1+pow(np.e,-x)))
     return 1 / (1 + np.e ** -x)
@@ -51,7 +41,7 @@ class neuralNetwork:
         self.inputToHiddenWeights = np.random.normal(0,1,((self.numHidden,self.numInputs+1))) ## 2D array of the weights for input passing to hidden layer
         # weights for every node in array of this size randomly according to normal distribution with center 0 and spread 1 
         self.hiddenToOutputWeights = np.random.normal(0,1,((self.numOutputs,self.numHidden+1))) ## 2D array of the weights for hidden passing to output layerinput
-                                                      
+
     ## train against imageInput by adjusting nodes so it reaches target
     def train(self, imageInput, targetOutput):
         targetOutput = np.array(targetOutput, ndmin=2).T
@@ -104,7 +94,7 @@ class neuralNetwork:
         return(hiddenOutput)
 
     ## checks/ returns error rate
-    def check(self,imageInput,targetOutput):
+    def check(self, imageInput,targetOutput):
         # find error for each node by difference between target and actual output
         outputErrors = targetOutput - actualOutput
         return(outputErrors/len(targetOutput))
@@ -113,26 +103,26 @@ class neuralNetwork:
     def getWeights(self):
         return(self.inputToHiddenWeights, self.hiddenToOutputWeights)
     
-    def loadWeights(fileName):
-        try:
-            loaded = np.load('weights/' + 'filename')
-        except:
-            print("Could not load file.")
-
-        w1 = loaded['w1']
-        w2 = loaded['w2']
+    def loadWeights(self, fileName):
+        print("Loading weights from file: ", fileName, " ...")
 
         try:
+            loaded = np.load('weights/' + fileName)
+            w1 = loaded['w1']
+            w2 = loaded['w2']
             self.inputToHiddenWeights = w1
             self.hiddenToOutputWeights = w2
+            print("Done loading.")
         except:
-            if (size(w1)!=size(inputToHiddenWeights) and (size(w2)!=size(hiddenToOutputWeights))):
-                print("Mismatch in weight matrix dimensions.")
-            else:
-                print("Could not assign weights from loaded file.")
+            print("Loading failed. Randomly initialising weights.")
+            initWeights()
 
     def saveWeights(fileName):
+        print("Saving weights...")
         w1 = inputToHiddenWeights
         w2 = hiddenToOutputWeights
-        np.savez_compressed("weights/fileName", w1, w2)
+        np.savez_compressed('weights/' + fileName, w1, w2)
+        print("Done saving weights.")
+
+    #def plotLearningCurve(self):
 
