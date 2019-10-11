@@ -142,7 +142,7 @@ def insquare(image,addp):
 
 # open image in grayscale
 def openimage(data_path):
-    gray = cv2.imread(data_path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+    gray = cv2.imread(data_path, cv2.IMREAD_GRAYSCALE)
     return(gray)
 
 def gaussian(image, blur):
@@ -164,7 +164,7 @@ def pixelsquare(image):
 
 # opens image and converts it to MNIST format!
 # datapath = where image is stored, blur = gaussian blur/sigma, showimage = whether image is plotted during function
-def mnistconvert(datapath, blur, showimage):
+def convert(datapath, blur, showimage):
     if(showimage):
         showimg(mpimg.imread(datapath))
     # loads orignally rgb image to grey + adds gaussian blur
