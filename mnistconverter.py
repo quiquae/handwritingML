@@ -154,11 +154,11 @@ def pixelsquare(image):
     bounded_image = boundingbox(image)
     # puts inside square
     squared_image = insquare(bounded_image,0)
-    # pixelates/rescales it to 20x20
-    rescaling_factor = 20/len(squared_image)
+    # pixelates/rescales it to 24x24
+    rescaling_factor = 24/len(squared_image)
     rescaled_image = rescale(np.asarray(bounded_image), rescaling_factor, anti_aliasing=False,multichannel=False)
     rescaled_image = img_as_ubyte(rescaled_image)
-    # pads 20x20 square inside 28x28 whitespace
+    # pads 24x24 square inside 28x28 whitespace
     padded_image = insquare(rescaled_image, 2)
     return(padded_image)
 
@@ -180,20 +180,6 @@ def convert(datapath, blur, showimage):
     return(image)
 
 ##def splitx(image):
-##    
-### opens image and converts it to MNIST format!
-### datapath = where image is stored, blur = gaussian blur/sigma, showimage = whether image is plotted during function
-##def mnistconvert(datapath, blur, showimage):
-##    images = splitx(openimageasbinary(datapath)
-##    # loads orignally rgb image to binary + adds gaussian blur
-##    for image in images:
-##        image = gaussian(image,blur)
-##        # puts inside pixelated square
-##        image = pixelsquare(image)
-##        # shows depending on the value of bool showimage
-##        if(showimage):
-##            showimg(image)
-##    return(images)
 
 
 #----------------------------------------------------------------------------------------

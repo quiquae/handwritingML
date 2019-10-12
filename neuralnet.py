@@ -117,10 +117,10 @@ class neuralNetwork:
             print("Loading failed. Randomly initialising weights.")
             initWeights()
 
-    def saveWeights(fileName):
+    def saveWeights(self, fileName):
         print("Saving weights...")
-        w1 = inputToHiddenWeights
-        w2 = hiddenToOutputWeights
+        w1 = self.inputToHiddenWeights
+        w2 = self.hiddenToOutputWeights
         np.savez_compressed('weights/' + fileName, w1, w2)
         print("Done saving weights.")
 

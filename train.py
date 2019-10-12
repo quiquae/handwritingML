@@ -1,9 +1,13 @@
-#go to settings (bottom left cog)
+#pylint args!!
+# go to settings (bottom left cog)
 #find Python > Linting: Pylint Args (search pylint args)
 #add:
 # --generate-members
 # --extension-pkg-whitelist=cv2
 
+import numpy as np
+import random
+import matplotlib.pyplot as plt
 from neuralnet import neuralNetwork
 from mnistconverter import convert
 import argparse #pip install argparse
