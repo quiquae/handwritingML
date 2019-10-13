@@ -168,10 +168,15 @@ def convert(datapath, blur, showimage):
     if(showimage):
         showimg(mpimg.imread(datapath))
     # loads orignally rgb image to grey + adds gaussian blur
-    image = gaussian(openimage(datapath),blur)
-    # resize it 
+    image = openimage(datapath)
+    showimg(image)
     image = cv2.resize(image, (28, 28))
+    showimg(image)
+    # resize it 
     (thresh, image) = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    showimg(image)
+    #image = gaussian(image, blur)
+    #showimg(image)
     # puts inside pixelated square
     image = pixelsquare(image)
     # shows depending on the value of bool showimage

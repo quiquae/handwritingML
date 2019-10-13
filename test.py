@@ -23,17 +23,17 @@ actual_imgs=[6, 0, 6, 3, 1, 2, 4, 5, 3, 3, 2, 9, 2, 4]
 #images = ["actual_image.jpeg","actual_image2.jpeg","actual_image3.jpg"]
 print("Image testing!")
 c = 0
-i = 0
+x = 0
 t = 0
-for i in range(3,15):
+for i in range(3,4):
     f = "data/actual_image"+str(i)+".jpg"
-    image = convert(f,1, False)
+    image = convert(f,1, True)
     res, ret = ANN.run(image.flatten())
     print(" prediction = ", res.argmax(), " actual = ", actual_imgs[i-1])
     if(actual_imgs[i-1]==res.argmax()):
         c+=1
     else:
-        i+=1
+        x+=1
     t+=1
-print("correct: ",c," incorrect: ",i," out of total: ",t," images")
+print("correct: ",c," incorrect: ",x," out of total: ",t," images")
 
