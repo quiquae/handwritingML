@@ -17,7 +17,7 @@ ANN = neuralNetwork(noInputs = 784,noOutputs = 10, hiddenSize=200, learningRatex
 ANN.loadWeights('weights.npz')
 
 ## for the actual_image.jpeg images (actual iPhone camera photos) list of the values they are supposed to be: 
-actual_imgs=[6, 0, 6, 3, 1, 2, 4, 5, 3, 3, 2, 9, 2, 4]
+actual_imgs=[6, 0, 6, 3, 1, 2, 4, 5, 3, 3, 2, 9, 2, 4,5,4,1,5,5,7,4]
 ## for the test_image images (binary/black&white) list of the values they are supposed to be: 2, 4, 5, 6, 3
 
 #images = ["actual_image.jpeg","actual_image2.jpeg","actual_image3.jpg"]
@@ -25,9 +25,9 @@ print("Image testing!")
 c = 0
 x = 0
 t = 0
-for i in range(3,13):
+for i in range(3,22):
     f = "data/actual_image"+str(i)+".jpg"
-    image = convert(f,1, True)
+    image = convert(f,1, False)
     res, ret = ANN.run(image.flatten())
     print(" prediction = ", res.argmax(), " actual = ", actual_imgs[i-1])
     if(actual_imgs[i-1]==res.argmax()):
