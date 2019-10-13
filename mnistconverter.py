@@ -192,9 +192,9 @@ def convert(datapath, blur, showimage):
     #image = gaussian(image, blur)
     #showimg(image)
     # puts inside pixelated square
+    image = pixelsquare(image)
     fac = 0.99 / 255
     image = np.asfarray(image) * fac + 0.01
-    image = pixelsquare(image)
     sx, sy = getbestshift(image)
     shifted = shift(image, sx, sy)
     image = shifted
