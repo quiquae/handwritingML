@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import cv2
 import numpy as np
-from scipy.ndimage import gaussian_filter
+import scipy.ndimage as nd
 from skimage import color, io, img_as_ubyte
 from skimage.measure import block_reduce
 from skimage.transform import rescale
@@ -43,7 +43,7 @@ def boundingbox(image):
         # iterates through every pixel in row
         for j in range(0,len(image[0])):
             intx = image[i][j]
-            if not(intx>=(255-greyleniency)):
+            if not(intx>=(0+greyleniency)):
                 allwhite = False
     # for UPPER
     # allwhite- boolean value showing if all pixels come across have been white
@@ -57,7 +57,7 @@ def boundingbox(image):
         # iterates through every pixel in row
         for j in range(0, len(image[0])):
             intx = image[i][j]
-            if not(intx>=(255-greyleniency)):
+            if not(intx>=(0+greyleniency)):
                 allwhite = False
     # for LEFT
     # allwhite- boolean value showing if all pixels come across have been white
@@ -72,7 +72,7 @@ def boundingbox(image):
         # iterates through every pixel in row
         for i in range(0, len(image)):
             intx = image[i][j]
-            if not(intx>=(255-greyleniency)):
+            if not(intx>=(0+greyleniency)):
                 allwhite = False
     # for RIGHT
     # allwhite- boolean value showing if all pixels come across have been white
@@ -86,7 +86,7 @@ def boundingbox(image):
         # iterates through every pixel in row
         for i in range(0, len(image)):
             intx = image[i][j]
-            if not(intx>=(255-greyleniency)):
+            if not(intx>=(0+greyleniency)):
                 allwhite = False
 
     # prints new bounds
@@ -128,7 +128,7 @@ def insquare(image,addp):
 ##        print("ENTERRED HERE2")
 
     # initialize it to 255 (white)
-    new_array = np.full((sqlength,sqlength),255)
+    new_array = np.full((sqlength,sqlength),0)
     # add values from image array into new array offset by the offset values
     for i in range(0, len(image)):
         for j in range(0,len(image[0])):
@@ -140,6 +140,23 @@ def insquare(image,addp):
 #-------------------- COMPLEX/AGGREGATE FUNCTIONS---------------------
 #---------------------------------------------------------------------
 
+# best shift
+def getbestshift(image):
+    # finds center of mass
+    cy,cx = nd.measurements.center_of_mass(image)
+    rows,cols = image.shape
+    # offset between center of mass of digit and center of image
+    shiftx = np.round(cols/2.0-cx).astype(int)
+    shifty = np.round(rows/2.0-cy).astype(int)
+    return shiftx,shifty
+
+# shifts image according to shift paramenters
+def shift(image, shiftx, shifty):
+    r,c = image.shape
+    M = np.float32([[1,0,shiftx],[0,1,shifty]])
+    shifted = cv2.warpAffine(image, M, (c,r))
+    return(shifted)
+
 # open image in grayscale
 def openimage(data_path):
     gray = cv2.imread(data_path, cv2.IMREAD_GRAYSCALE)
@@ -147,7 +164,7 @@ def openimage(data_path):
 
 def gaussian(image, blur):
     # gaussian blur- yay!
-    return(gaussian_filter(image, blur))
+    return(nd.gaussian_filter(image, blur))
 
 def pixelsquare(image):
     # fits bounding box to image
@@ -155,11 +172,11 @@ def pixelsquare(image):
     # puts inside square
     squared_image = insquare(bounded_image,0)
     # pixelates/rescales it to 24x24
-    rescaling_factor = 24/len(squared_image)
+    rescaling_factor = 20/len(squared_image)
     rescaled_image = rescale(np.asarray(bounded_image), rescaling_factor, anti_aliasing=False,multichannel=False)
     rescaled_image = img_as_ubyte(rescaled_image)
     # pads 24x24 square inside 28x28 whitespace
-    padded_image = insquare(rescaled_image, 2)
+    padded_image = insquare(rescaled_image, 4)
     return(padded_image)
 
 # opens image and converts it to MNIST format!
@@ -169,16 +186,18 @@ def convert(datapath, blur, showimage):
         showimg(mpimg.imread(datapath))
     # loads orignally rgb image to grey + adds gaussian blur
     image = openimage(datapath)
-    showimg(image)
-    image = cv2.resize(image, (28, 28))
-    showimg(image)
+    image = cv2.resize(255-image, (28, 28))
     # resize it 
     (thresh, image) = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-    showimg(image)
     #image = gaussian(image, blur)
     #showimg(image)
     # puts inside pixelated square
+    fac = 0.99 / 255
+    image = np.asfarray(image) * fac + 0.01
     image = pixelsquare(image)
+    sx, sy = getbestshift(image)
+    shifted = shift(image, sx, sy)
+    image = shifted
     # shows depending on the value of bool showimage
     if(showimage):
         showimg(image)

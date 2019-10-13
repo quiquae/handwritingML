@@ -29,8 +29,9 @@ print("Loading data...")
 # datapath where my files for the testing/training data are stored in my computer
 data_path = "C:\\Users\\creag\\Downloads\\"
 # test image I took from my phone of my own handwriting!! for later
-image = convert("C:\\Users\\creag\\OneDrive\\compsci-proj\\actual_image.jpeg",4,True)
+image = convert("C:\\Users\\creag\\OneDrive\\compsci-proj\\actual_image5.jpeg",4,True)
 
+print("Loading images.")
 # load test & train data from csv files
 train_data = np.loadtxt(data_path + "mnist_train.csv", 
                         delimiter=",")
@@ -78,7 +79,8 @@ ANN.initWeights() # initialize weights
     # data_array = np.fromstring(line, sep=",")
     # converted = convertForm(data_array, ANN.numOutputs)
     # ANN.train(converted[0],converted[1])
-	
+
+print(train_imgs[0])
 for i in range(len(train_imgs)):
 	ANN.train(train_imgs[i], train_labels_one_hot[i])
 

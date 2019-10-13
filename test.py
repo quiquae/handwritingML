@@ -25,7 +25,7 @@ print("Image testing!")
 c = 0
 x = 0
 t = 0
-for i in range(3,4):
+for i in range(3,13):
     f = "data/actual_image"+str(i)+".jpg"
     image = convert(f,1, True)
     res, ret = ANN.run(image.flatten())
