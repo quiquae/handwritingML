@@ -6,9 +6,7 @@ Code complete & functional with ~93% accuracy on MNIST images, ~85% accuracy rat
 - neuralnet.py as class to create basic neural net
 - train.py and test.py (do what they say) train & test neural net on MNIST images
 - mnistconverter.py as converter to convert normal photos to MNIST-like input
-
-WIP! gridsplitter.py is me trying to split digits from photo with multiple digits in red grid
-
+- WIP!!! gridsplitter.py is me trying to split digits from photo with multiple digits in red grid
 - data folder contains lots of test images (actual_image = cropped iPhone photo, test_image = variety of digital images)
 - images folder contains images used in programs (colored backgrounds for visualisation, redgrid as test for gridsplitter.py)
 - weights folder contains saved weights from neural net program
