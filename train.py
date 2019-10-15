@@ -27,9 +27,9 @@ def convertForm(dataArray, numOutputs):
 # ----------------------------------------------------------------------------
 print("Loading data...")
 # datapath where my files for the testing/training data are stored in my computer
-data_path = "C:\\Users\\creag\\Downloads\\"
+data_path = ""
 # test image I took from my phone of my own handwriting!! for later
-image = convert("C:\\Users\\creag\\OneDrive\\compsci-proj\\actual_image5.jpeg",4,True)
+image = convert("actual_image20.JPG",4,True)
 
 print("Loading images.")
 # load test & train data from csv files
