@@ -115,7 +115,7 @@ class neuralNetwork:
             print("Done loading.")
         except:
             print("Loading failed. Randomly initialising weights.")
-            initWeights()
+            self.initWeights()
 
     def saveWeights(self, fileName):
         print("Saving weights...")

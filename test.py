@@ -16,6 +16,10 @@ ANN = neuralNetwork(noInputs = 784,noOutputs = 10, hiddenSize=200, learningRatex
 # set inputs to be 784 (image pixel size), outputs to be 10 (digits 0-9), size of hidden layer, and learning rate
 ANN.loadWeights('weights.npz')
 
+
+#-------------------- TESTING PHOTO EXAMPLES -------------------------------
+#----------------------------------------------------------------------------
+
 ## for the actual_image.jpeg images (actual iPhone camera photos) list of the values they are supposed to be: 
 actual_imgs=[6, 0, 6, 3, 1, 2, 4, 5, 3, 3, 2, 9, 2, 4,5,4,1,5,5,7,4]
 ## for the test_image images (binary/black&white) list of the values they are supposed to be: 2, 4, 5, 6, 3
@@ -36,4 +40,6 @@ for i in range(3,22):
         x+=1
     t+=1
 print("correct: ",c," incorrect: ",x," out of total: ",t," images")
+p = 100*round(((c+0.00005)/t),4)
+print("% correct: ",p)
 

@@ -1,4 +1,4 @@
-#pylint args!!
+#FOR CV2:: pylint args!!
 # go to settings (bottom left cog)
 #find Python > Linting: Pylint Args (search pylint args)
 #add:
@@ -28,8 +28,6 @@ def convertForm(dataArray, numOutputs):
 print("Loading data...")
 # datapath where my files for the testing/training data are stored in my computer
 data_path = ""
-# test image I took from my phone of my own handwriting!! for later
-image = convert("actual_image20.JPG",4,True)
 
 print("Loading images.")
 # load test & train data from csv files
@@ -44,9 +42,6 @@ train_labels = np.asfarray(train_data[:, :1])
 test_labels = np.asfarray(test_data[:, :1])
 print("Done loading data.\n\n")
 
-#print(train_imgs.shape)
-#print(train_labels.shape)
-
 lr = np.arange(10)
 # transform labels into one hot representation
 train_labels_one_hot = (lr==train_labels).astype(np.float)
@@ -57,99 +52,77 @@ train_labels_one_hot[train_labels_one_hot==1] = 0.99
 test_labels_one_hot[test_labels_one_hot==0] = 0.01
 test_labels_one_hot[test_labels_one_hot==1] = 0.99
 
-#print(train_labels_one_hot[0:5])
-
 # ----------------------------------------------------------------------------
 # ------------------------------- RUN NETWORK --------------------------------
 # ----------------------------------------------------------------------------
-	
-## FORMAT:: comes as comma seperated text file
-#w/ first number being number it's supposed to be, then 784 pixel values 0-255
-# so uploaded both test/train files into arrays of 785, first being number and rest being image
-print("Training Network...")
 
-ANN = neuralNetwork(noInputs = 784,noOutputs = 10, hiddenSize=200, learningRatex=0.1)
-# set inputs to be 784 (image pixel size), outputs to be 10 (digits 0-9), size of hidden layer, and learning rate
-ANN.initWeights() # initialize weights
+niterations = 50 # number of times network will be run- best accuracy percentage network will be saved as weights for use later
+maxacc = 0 # maximum accuracy counter (starts at 0, replaced by accuracies if larger)
+show = False ## whether to show lots of information about & visualise each iteration or not
 
-# mnist - 28x28 image, pixels 0-255
-
-## as we load a line (1 training image) we train the network on it
-# for line in open(data_path + "mnist_train.csv"):
-    # data_array = np.fromstring(line, sep=",")
-    # converted = convertForm(data_array, ANN.numOutputs)
-    # ANN.train(converted[0],converted[1])
-
-print(train_imgs[0])
-for i in range(len(train_imgs)):
-	ANN.train(train_imgs[i], train_labels_one_hot[i])
-
-print("Training complete.\n")
-      
-## we load the test data as an array of arrays then check so we get an average  
-#test_data_images = np.empty([10000,784])
-#test_data_scores = np.empty([10000,10])
-#row = 0
-
-#load line as converted data into test array
-# for line in open(data_path + "mnist_test.csv"):
-    # test = convertForm(np.fromstring(line, sep=","), ANN.numOutputs)
-    # #test_data_images.append(test[0])
-    # #test_data_scores.append(test[1])
-    # test_data_img = test[0]
-    # test_data_label = test[1]
-    # res = ANN.run(test_data_img)
-    #print(res)
-    #row += 1
-
-# print("ACCURACY: "+str(ANN.check(test_data)))
-
-print("Running Network...")
-
-print("EXAMPLES::\n")
-print("Running on training data (high accuracy - predicted labels should all match actual targets)")
-for i in range(5):
-	train_img = train_imgs[i]
-	train_label = train_labels[i]
-	res, ret = ANN.run(train_img)
-	#print(res)
-	print("Prediction = ", res.argmax())
-	print("Target = ", train_label)
-
-print("Running on test data")
-correct  = 0
-for i in range(len(test_labels)):
-    test_img = test_imgs[i]
-    test_label = test_labels[i]
-    res, ret = ANN.run(test_img)
-    if(i<5):
-        print("Prediction = ", res.argmax()," ; Target = ", test_label)
-    if(res.argmax()==test_label):
-        correct+=1
+## repeats for the number of iterations
+for i in range(niterations):
+    if(show):
+        print("Training Network...")
         
-print("Accuracy: ",str(100*correct/len(test_labels))," %")    
+    ANN = neuralNetwork(noInputs = 784,noOutputs = 10, hiddenSize=200, learningRatex=0.1)
+    # set inputs to be 784 (image pixel size), outputs to be 10 (digits 0-9), size of hidden layer, and learning rate
+    ANN.initWeights() # initialize weights
+    # mnist - 28x28 image, pixels 0-255
 
-print("Visualize Test predictions: ")
-#Plots predicitons/actual with green/red to show as correct or incorrect
-nplots = 90 # plots a few (90) examples of our predictions/dataset
-fig = plt.figure(figsize = (30,30))
-fig.tight_layout()
-n = random.randint(0,len(test_labels)-nplots) # random starting number so images plotted are relatively random
-for j in range(n, nplots+n):
-    plt.subplot(10,9,(j-n+1)) # divides window into smaller plots
-    plt.imshow(np.reshape(test_imgs[j],(28,28)), cmap='binary') # show images!
-    prediction  = ANN.run(test_imgs[j])[0].argmax() # see what our neural net predicts
-    if(prediction==test_labels[j]): # if correct, hooray.
-        x = plt.imread("C:\\Users\\creag\\OneDrive\\compsci-proj\\green_background2.png") # green = win
-        plt.title(str(int(test_labels[j])))
-    else:
-        x = plt.imread("C:\\Users\\creag\\OneDrive\\compsci-proj\\red_background2.png") # red X = lose
-        plt.title(str(prediction)+" X, "+str(int(test_labels[j]))+" ✓")
-    plt.imshow(x)
-    plt.axis('off')
-    plt.subplots_adjust(hspace = 2)
-plt.show() # show ploY
+    for i in range(len(train_imgs)):
+            ANN.train(train_imgs[i], train_labels_one_hot[i])
+    if(show):
+        print("Training complete.\n")
+        print("Running Network for examples...")
+        print("Running on training data (high accuracy - predicted labels should all match actual targets)")
 
-print("Done running.")
+    if(show):
+        for i in range(5):
+            train_img = train_imgs[i]
+            train_label = train_labels[i]
+            res, ret = ANN.run(train_img)
+            #print(res)
+            print("Prediction = ", res.argmax())
+            print("Target = ", train_label)
+        print("Running on test data")
+    correct  = 0
+    for i in range(len(test_labels)):
+        test_img = test_imgs[i]
+        test_label = test_labels[i]
+        res, ret = ANN.run(test_img)
+        if(i<5 and show):
+            print("Prediction = ", res.argmax()," ; Target = ", test_label)
+        if(res.argmax()==test_label):
+            correct+=1
 
-ANN.saveWeights('weights_test.npz')
+    acc = 100*correct/len(test_labels)   # accuracy!
+
+    if(show):
+        print("Visualize Test predictions: ")
+        #Plots predicitons/actual with green/red to show as correct or incorrect
+        nplots = 90 # plots a few (90) examples of our predictions/dataset
+        fig = plt.figure(figsize = (30,30))
+        fig.tight_layout()
+        n = random.randint(0,len(test_labels)-nplots) # random starting number so images plotted are relatively random
+        for j in range(n, nplots+n):
+            plt.subplot(10,9,(j-n+1)) # divides window into smaller plots
+            plt.imshow(np.reshape(test_imgs[j],(28,28)), cmap='binary') # show images!
+            prediction  = ANN.run(test_imgs[j])[0].argmax() # see what our neural net predicts
+            if(prediction==test_labels[j]): # if correct, hooray.
+                x = plt.imread("images\\green_background2.png") # green = win
+                plt.title(str(int(test_labels[j])))
+            else:
+                x = plt.imread("images\\red_background2.png") # red X = lose
+                plt.title(str(prediction)+" X, "+str(int(test_labels[j]))+" ✓")
+            plt.imshow(x)
+            plt.axis('off')
+            plt.subplots_adjust(hspace = 2)
+        plt.show() # show ploY
+        print("Done running.\n\n")
+
+    if(acc>maxacc):
+        ANN.saveWeights('weights_test.npz')
+        maxacc = acc
+        
+    print(i+1," Accuracy: ",acc," % to Max Accuracy: ",maxacc," %")  
