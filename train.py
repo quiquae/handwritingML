@@ -56,7 +56,7 @@ test_labels_one_hot[test_labels_one_hot==1] = 0.99
 # ------------------------------- RUN NETWORK --------------------------------
 # ----------------------------------------------------------------------------
 
-niterations = 50 # number of times network will be run- best accuracy percentage network will be saved as weights for use later
+niterations = 1 # number of times network will be run- best accuracy percentage network will be saved as weights for use later
 maxacc = 0 # maximum accuracy counter (starts at 0, replaced by accuracies if larger)
 show = False ## whether to show lots of information about & visualise each iteration or not
 
@@ -70,8 +70,22 @@ for i in range(niterations):
     ANN.initWeights() # initialize weights
     # mnist - 28x28 image, pixels 0-255
 
-    for i in range(len(train_imgs)):
-            ANN.train(train_imgs[i], train_labels_one_hot[i])
+    x = []
+    y = []
+    for i in range(0,len(train_imgs),10):
+        x.append(i)
+        ANN.train(train_imgs[i], train_labels_one_hot[i])
+        correct = 0
+        for j in range(len(test_labels)):
+            test_img = test_imgs[j]
+            test_label = test_labels[j]
+            res, ret = ANN.run(test_img)
+            if(res.argmax()==test_label):
+                correct+=1
+        y.append((correct/(len(test_labels))))
+    plt.plot(x,y)
+    plt.savefig("trainingimprovement.png")
+    plt.close()
     if(show):
         print("Training complete.\n")
         print("Running Network for examples...")
@@ -125,4 +139,4 @@ for i in range(niterations):
         ANN.saveWeights('weights_test.npz')
         maxacc = acc
         
-    print(i+1," Accuracy: ",acc," % to Max Accuracy: ",maxacc," %")  
+    print((i+1)," Accuracy: ",acc," % to Max Accuracy: ",maxacc," %")  
