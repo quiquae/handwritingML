@@ -1,12 +1,14 @@
 # every single thing i have to import for this image edit code (my goD!)
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import cv2
 import numpy as np
 import scipy.ndimage as nd
 from skimage import color, io, img_as_ubyte
 from skimage.measure import block_reduce
-from skimage.transform import rescale
+from skimage.transform import rescale, AffineTransform, resize
+from skimage.color import rgb2gray
+from skimage.data import imread
+from skimage.filters import threshold_minimum
 
 blurredness = 2 # controls how blurry gaussian filter is
 greyleniency = 16 # how many tones of leniency for considering something absolute white for bounding box, i.e. 3 --> anything >252 is white, <3 is black
@@ -152,14 +154,14 @@ def getbestshift(image):
 
 # shifts image according to shift paramenters
 def shift(image, shiftx, shifty):
-    r,c = image.shape
-    M = np.float32([[1,0,shiftx],[0,1,shifty]])
-    shifted = cv2.warpAffine(image, M, (c,r))
-    return(shifted)
+    #r,c = image.shape
+    #M = np.float32([[1,0,shiftx],[0,1,shifty]])
+    #shifted = AffineTransform(M, (c,r))
+    return(image)
 
 # open image in grayscale
 def openimage(data_path):
-    gray = cv2.imread(data_path, cv2.IMREAD_GRAYSCALE)
+    gray = rgb2gray(imread(data_path))
     return(gray)
 
 def gaussian(image, blur):
@@ -186,9 +188,10 @@ def convert(datapath, blur, showimage):
         showimg(mpimg.imread(datapath))
     # loads orignally rgb image to grey + adds gaussian blur
     image = openimage(datapath)
-    image = cv2.resize(255-image, (28, 28))
+    image = resize(255-image, (28, 28))
     # resize it 
-    (thresh, image) = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    thresh = threshold_minimum(image)
+    image = image > thresh
     #image = gaussian(image, blur)
     #showimg(image)
     # puts inside pixelated square
