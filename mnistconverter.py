@@ -8,7 +8,7 @@ from skimage.measure import block_reduce
 from skimage.transform import rescale, AffineTransform, resize
 from skimage.color import rgb2gray
 from skimage.data import imread
-from skimage.filters import threshold_minimum
+from skimage.filters import threshold_otsu
 
 blurredness = 2 # controls how blurry gaussian filter is
 greyleniency = 16 # how many tones of leniency for considering something absolute white for bounding box, i.e. 3 --> anything >252 is white, <3 is black
@@ -190,7 +190,7 @@ def convert(datapath, blur, showimage):
     image = openimage(datapath)
     image = resize(255-image, (28, 28))
     # resize it 
-    thresh = threshold_minimum(image)
+    thresh = threshold_otsu(image)
     image = image > thresh
     #image = gaussian(image, blur)
     #showimg(image)
