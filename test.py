@@ -31,7 +31,7 @@ x = 0
 t = 0
 for i in range(1,10):
     f = "data/actual_image"+str(i)+".jpg"
-    image = convert(f,1, False
+    image = convert(f,1, False)
     res, ret = ANN.run(image.flatten())
     print(" prediction = ", res.argmax(), " actual = ", actual_imgs[i-1])
     if(actual_imgs[i-1]==res.argmax()):
